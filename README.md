@@ -29,9 +29,8 @@ Load Forecasting Container
     └───consumptiondata_withweather_by_meter.parquet
     └───consumptiondata_withweather_by_group.parquet  //used for training
 └───inference
+    └───current_readings.parquet //used for the inferencing step to generate the lags of the input (48 hours).
     └───_forecast_wx_data //used for caching forecast wx data
-└───staging
-    └───readings.parquet //current last 48 hours of readings used for inferencing. 
 └───models 
     └───meter_grouping_1
         └───training_artifacts
@@ -45,8 +44,6 @@ Load Forecasting Container
     └───meter_grouping_n  
         └───training_artifacts
 ```
-
-<img src="img/folderlayoutlf.png" style="max-width:200px;"/>
 
 ## Input Data Format
 
@@ -104,7 +101,7 @@ Executing the ```Training``` notebook builds the models in parallel for each gro
 The training happens *per meter grouping* and creates a model per group.  This happens in parallel per group. 
 
 ## Inferencing and Forecasting
-Once the training is complete and the models have been created, we can now run the inferencing step.  This step requires us to have 48 hours of previous usage. This is saved in ```/lf/staging/readings.parquet``` in the format that matches the PreProcess format:
+Once the training is complete and the models have been created, we can now run the inferencing step.  This step requires us to have 48 hours of previous usage. This is saved in ```/lf/inference/current_readings.parquet``` in the format that matches the PreProcess format:
 
 ```json
 {
